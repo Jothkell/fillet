@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:38:23 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/07/19 21:38:52 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/20 11:49:10 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,33 +134,6 @@ void	printbits(uint64_t this)
 	}
 }
 
-void	print_res(piece *p) //based on printbits
-{
-	int i;
-    int hold;
-	char c;
-	uint64_t this;
-
-	c = 0;
-	i = 0;
-    hold = 0;
-	while (i < 4)
-	{
-		this = (uint64_t)p[i].value;
-		if (p->id >= 'A' && p->id <= 'Z')
-		{
-			hold = ((int)p->value % 2);
-			this /= 2;
-			print_res(p);
-			if (hold == 1)
-				write(1, &p->id, 1);
-			else
-				write(1, "\n", 1);
-		}
-		p++;
-		i++;
-	}
-}
 
 int		reader(int fd, piece *p) //return 1 or 0 for success or fail
 {
@@ -191,29 +164,6 @@ int		reader(int fd, piece *p) //return 1 or 0 for success or fail
 	return (1);
 }
 
-char get_final(piece *p) //get the final piece, return its id
-{
-	int i;
-	int j;
-	int height;
-
-	height = 0;
-	j = 0;
-	i = 0;
-	while (is_piece(p[i]))
-	{
-		j = 0;
-		height = 0;
-		while (j++ < 4)
-			if (p[i].value[j] > 0)
-				height++;
-		p[i].height = height;
-		i++;
-	}
-	i--;
-	return (p[i].id);
-}
-
 void zero_it(boards *board, piece *p)
 {
 	int i;
@@ -234,6 +184,44 @@ void zero_it(boards *board, piece *p)
 	}
 }
 
+char get_final(piece *p) //get the final piece, return its id
+{
+    int i;
+    int j;
+    int height;
+
+    height = 0;
+    j = 0;
+    i = 0;
+    while (is_piece(p[i]))
+    {
+        j = 0;
+        height = 0;
+        while (j++ < 4)
+            if (p[i].value[j] > 0)
+                height++;
+        p[i].height = height;
+        i++;
+    }
+    i--;
+    return (p[i].id);
+}
+
+void temp(boards *board)
+{
+	uint8_t strnum;
+	uint8_t i;
+
+	i = 0;
+	strnum = (board->final) - 64;
+	while(i < 52)
+	{
+		printbits(board->row[i]);
+		printf("\n");
+		i++;
+	}
+}
+
 int main(int argc, char ** argv)
 {
 	int file;
@@ -243,11 +231,11 @@ int main(int argc, char ** argv)
 	board = (boards*)malloc(sizeof(boards*));
 	zero_it(board, p);//initialize everything to 0
 	if(!reader((file = open(argv[1], O_RDONLY)), p))
-		return (1);
+		write (1, "trouble reading, come closer\n", 30);
 	board->final = get_final(p);
 	board->size = 2;
 	if (solver(p, board))
-		print_res(p);
+		temp(board);
 	else
 		write (1, "sorry, no answer\n", 17);
 	return (0);

@@ -6,7 +6,7 @@
      By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+          
                                                   +#+#+#+#+#+   +#+             
      Created: 2018/07/18 12:23:22 by jkellehe          #+#    #+#               
-     Updated: 2018/07/19 22:46:53 by jkellehe         ###   ########.fr         
+     Updated: 2018/07/20 10:39:42 by jkellehe         ###   ########.fr         
                                                                                 
 ********************************************************************************
 
@@ -80,5 +80,5 @@ I think this will work with reference to top left corner, as long as we combine 
 RIGHT NOW ****the algorithm checks for the first position of each piece that satisfies the size req at the time, then moves on, and if it backtracks, it move to the next piece.   but it needs to stay on the current piece when it backtracks, until it has exhausted all the positions that satisfy the size pos. a note has been made on line 92 on how to do this. 
 
 todo:
--the above thing
+DONE-the above thing
 -also make it check from the high left position as described, in the method described. 

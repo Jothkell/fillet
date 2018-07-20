@@ -6,7 +6,7 @@
 /*   By: dknoll <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/08 17:02:15 by dknoll            #+#    #+#             */
-/*   Updated: 2018/07/19 22:07:09 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/20 14:35:24 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ struct s_piece
 	uint64_t value[4];
 	//piece *last;//maybe replace this with pieces placed so far, a string. 
 	uint8_t id;
-	uint8_t x;
-	uint8_t y;
+	int x;
+	int y;
+	int xlast;
+	int ylast;
 	uint8_t width;
 	uint8_t height;
 	uint8_t placed;
