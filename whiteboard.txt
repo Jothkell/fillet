@@ -1,0 +1,30 @@
+********************************************************************************
+lets do a good jorb, together                                                            
+
+            :::      ::::::::
+          :+:      :+:    :+:
+        +:+ +:+         +:+
+      +#+  +:+       +#+
+    +#+#+#+#+#+   +#+
+          #+#    #+#
+         ###   ########.fr
+
+*******************************************************************************
+
+
+thoughts, organized by function name:
+
+FILLET_C
+todo: 
+-need to parse the periods of front and back of pieces, probably in ft_something.  not all periods, but the ones that dont exist in "valid_pieces".  
+-there is undefined behavior in ft_pieces, in the first half, where the pieces are made but the #s havent been made into alpha characters yet.   The mallocs are protected so I dont know whats going on, and it only ever effects pieces[0].  about half the time pieces[0] is what its supposed to be( ...A x 4, using valid_sample), the other half it is a hex number. 
+
+validator function:
+to be a valid input. must have 20 chars followed by newline.  iterate over str param.
+Evertime the iterateror(starting at 1) is evently divisible by 5 check that its a new line, and check if its a '\n'. if it is, check also if it is evenly divisible by 20.   if it is, send your string called hold to "piece_validator". 
+
+
+piece_validator:
+if the piece is one of the 19 valid ones, return 1, else return 0. only called by "validator". 
+
+

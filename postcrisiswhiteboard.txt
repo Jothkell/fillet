@@ -1,0 +1,84 @@
+********************************************************************************
+                                                                                
+                                                          :::      ::::::::     
+     postcrisiswhiteboard.txt                           :+:      :+:    :+:     
+                                                      +:+ +:+         +:+       
+     By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+          
+                                                  +#+#+#+#+#+   +#+             
+     Created: 2018/07/18 12:23:22 by jkellehe          #+#    #+#               
+     Updated: 2018/07/19 22:46:53 by jkellehe         ###   ########.fr         
+                                                                                
+********************************************************************************
+
+what if we just made the pieces coded to the largest possible side. then the board would also be coded this way, 52 length sides probably.  then you would just right shift and left shift pieces and see if they should | operator all 0s, aka 0, meaning the board is blank there, then ^|= the board with the piece to toggle the piece in.   
+
+this means to add 48 0s, aka 48 << shifts in between lines from the file.  the board can just be an array of 52 uint64_t worth 0 each. but they are worth gold my friends, beautiful gold.  
+
+so the first step is to make the pieces in this format.   instead of being 1100110000000000, it should be 
+
+1100
+1100
+0000
+0000
+
+1100000000000000000000000000000000000000000000000000
+1100000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000
+
+so my goal is to make that number.  and also modify printbits to give me a newline every time i is %52, starting at 1
+   -this is too big for one 64bit, so needs to be 4, so the struct needs to have array of 64bit numbs. 
+the addition for this method is that you have to figure out the size of the answer at the end, which would be which 64bit int has a 1 the farthest down. 
+	-update, we are going to have a string board running in parallel. we wont even need to figure largest size, just print the alpha characters in each string. 
+
+if the bit is placeable, place it, and also place the id int a 2D string array.  and call solver with next piece.   if not solvable, toggle the piece and erase the array.  
+
+________________
+since we will be checking all piece orders inherently, starting with the given order, we can stop when we find our first solution, if we go in order of size
+
+______________> x
+|
+|
+|
+|
+\/
+y
+
+
+answer for valid sample:
+
+ABBB
+ADDB
+ADD
+ACCCC
+
+ABBB
+AC B
+ACDD
+ACDD   I think its this one even though it's clearly dumber
+ C
+
+
+im going to switch to the subject example so we know the answer
+
+answer for good sample:
+    
+  
+  C AA
+  CCCA
+     A
+  BBBB
+  
+
+NEED MODIFICATIONS TO CHECKER TO CHECK ALL SIDES OF EXISTING SHAPE. 
+	 -need to understand the human algorithm first
+
+we are toggling only the left side from left to right, we need to toggle left from left to right.  if you make the x and y in checker negative, this almost does it.  maybe negative by width and height respectively? would need to make sure they are touching, which means one more shift would be overlapping, which coulud be written in.   
+
+I think this will work with reference to top left corner, as long as we combine this with checks for touching. this is for the cases in which the top left corner is not occupied, or the equivalent in the moving piece. 
+
+RIGHT NOW ****the algorithm checks for the first position of each piece that satisfies the size req at the time, then moves on, and if it backtracks, it move to the next piece.   but it needs to stay on the current piece when it backtracks, until it has exhausted all the positions that satisfy the size pos. a note has been made on line 92 on how to do this. 
+
+todo:
+-the above thing
+-also make it check from the high left position as described, in the method described. 
