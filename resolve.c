@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/23 12:17:05 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/07/30 22:09:48 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/31 00:08:41 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,10 @@ void widtheight(piece *p, boards *board)//amoung placed record lowest x value, h
 {//assign this to boards, width and tlx respectively, and is.xlast
     p[board->current].i = 0;
 	board->i = 0;
+	board->tlx = 0;
+	board->tly = 0;
+	board->xmax = 0;
+	board->ymax = 0;
     while (is_piece(p[board->i]))
     {
         if (p[board->i].placed)
@@ -89,19 +93,16 @@ int leftof(piece is, boards *board)
 
 int checky(piece *p, boards *board)//right shift by shift, if piece fits, return 1, else, shift back a\nd return 0
 {//modify to run the if statement within a while loop, increasing the y value thruough 
-	int hold;
-	int count;//if returns as 2, then we need to stop chekcing this side of board
 
-	count = 2;
-	while ((p[board->current].ylast + p[board->current].height) <= (board->size))
+	while ((p[board->current].ylast + p[board->current].height - board->tly) <= (board->size))
 	{
-		if ((hold = touching(p[board->current], board)) && !(board->row[p[board->current].ylast] & p[board->current].value[0]) && !(board->row[p[board->current].ylast + 1] & p[board->current].value[1])
+		if ((board->hold = touching(p[board->current], board)) && !(board->row[p[board->current].ylast] & p[board->current].value[0]) && !(board->row[p[board->current].ylast + 1] & p[board->current].value[1])
 			&& !(board->row[p[board->current].ylast + 2] & p[board->current].value[2]) && !(board->row[p[board->current].ylast + 3] & p[board->current].value[3]))
 			return (1);
 		p[board->current].ylast++;
-		count += hold;
+		board->count += board->hold;
 	}
-    return (count);
+    return (board->count);
 }
 
 void  shifter(piece *p, boards *board, uint8_t lr)//lr 1 means right shift 1, 
@@ -126,6 +127,8 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 {//start by setting xmax/ymax, tlx, tly,
 	int flag = 1;
 	int flag2 = 0;
+    if ((board->xmax - board->tlx) > board->size || (board->ymax - board->tly) > board->size)
+        return (0);
 	if (all_placed(p))
 		return (1);
 	if ((p[board->current].width > board->size) || (p[board->current].height > board->size))
@@ -133,21 +136,20 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 		p[board->current].firstcheck = 1;		
 		return (2);
 	}
-	if (p[board->current].firstcheck)
+	widtheight(p, board);
+    p[board->current].xlast = board->tlx;
+    p[board->current].ylast= board->tly;
+	while (p[board->current].id != 'A' && (touching(p[board->current], board) || leftof(p[board->current], board)) && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size))
 	{
-		p[board->current].firstcheck = 0;
-		p[board->current].xlast = 0;
-		while (p[board->current].id != 'A' && (touching(p[board->current], board) || leftof(p[board->current], board)) && ((p[board->current].xlast + p[board->current].width) <= board->size))
-		{
-			shifter(p, board, 1);
-			p[board->current].xlast++;
-		}
-		(p[board->current].id != 'A') ? (shifter(p, board, 0)) : (1);
-		p[board->current].xlast -= (p[board->current].id != 'A') ? (1) : (0);
+		shifter(p, board, 1);
+		p[board->current].xlast++;
 	}
+	(p[board->current].id != 'A') ? (shifter(p, board, 0)) : (1);
+	  p[board->current].xlast -= (p[board->current].id != 'A') ? (1) : (0);
 	while (flag != 2 && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size)) //check every piece on the right of board
 	{
 		p[board->current].ylast = board->tly;
+		board->count = 2;
 		while(1 == (flag = checky(p, board)))
 		{
 			toggle(board, p);
@@ -169,9 +171,11 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 	flag = 1;
 	shifter(p, board, 0);
 	p[board->current].xlast--;
-	while (flag != 2 && (board->size >= (board->xmax - p[board->current].xlast)))//check all pos moving left until beyond touching
+	widtheight(p, board);
+	while (flag != 2 && (board->size >= (board->xmax  - p[board->current].xlast)))//check all pos moving left until beyond touching
 	{
 		p[board->current].ylast = board->tly;
+		board->count = 2;
 		while(1 == (flag = checky(p, board)))
 		{
             toggle(board, p);
@@ -190,7 +194,6 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 		p[board->current].xlast--;
 		shifter(p, board, 0);
 	}
-	p[board->current].firstcheck = 1;
 	return (0);
 }
 
@@ -204,6 +207,7 @@ int     solver(piece *p, boards *board)
     {
 		zero_it(board, p);
         sizehold = board->size;
+		widtheight(p, board);
         if(checker(p, board) == 1)
             return (1);
 		board->size = sizehold;

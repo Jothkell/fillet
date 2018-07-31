@@ -6,7 +6,7 @@
 /*   By: dknoll <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/08 17:02:15 by dknoll            #+#    #+#             */
-/*   Updated: 2018/07/30 22:43:50 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/30 14:46:17 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ struct s_piece
 	uint8_t height;
 	uint8_t firstcheck;
 	uint8_t i;
+	uint8_t oncetouch;
 };
 
 struct s_boards
@@ -53,8 +54,7 @@ struct s_boards
 	int tly;
 	int xmax;
 	int ymax;
-	uint8_t count;
-	uint8_t hold;
+
 };
 
 int solver (piece *p, boards *board);
