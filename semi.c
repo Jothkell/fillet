@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:38:23 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/07/20 11:49:10 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/30 17:36:34 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		get_top(uint64_t *value) //return the highest value digit in input, 1 or 0
 	{
 		holder = value[i];
 		j = 0;
-		while (j < 51 && holder)
+		while (j < 35 && holder)
 		{
 			holder /= 2;
 			j++;
@@ -86,7 +86,7 @@ int		bitter(char *buf, piece *p)//place the pieces into the 4 x 64bit array poin
 		{
 			maxgirth = (girth > maxgirth) ? (girth) : (maxgirth);
 			girth = 0;
-			value <<= 48;
+			value <<= 32;
 			p->value[j++] = value;
 			value = 0;
 		}
@@ -161,6 +161,7 @@ int		reader(int fd, piece *p) //return 1 or 0 for success or fail
 		p += 1;
 		i++;
 	}
+	p->id = 0;
 	return (1);
 }
 
@@ -171,12 +172,20 @@ void zero_it(boards *board, piece *p)
 	i = 0;
 	while (i < 28)
 	{
-		p[i].id = 0;
 		p[i].placed = 0;
+		p[i].firstcheck = 1;
+		p[i].xlast = 0;
+		p[i].ylast = 0;
 		i++;
 	}
 	board[0].final = (char)malloc(sizeof(char));
 	i = 0;
+	board[0].tlx = 0;
+	board[0].tly = 0;
+	board[0].xmax = 0;
+	board[0].ymax = 0;
+	board[0].current = 0;
+	board[0].i = 0;
 	while (i < 52)
 	{
 		board[0].row[i] = 0;
@@ -197,6 +206,8 @@ char get_final(piece *p) //get the final piece, return its id
     {
         j = 0;
         height = 0;
+		if ((p[i].value[1] == 51539607552 && p[i].value[0] == 25769803776) || (p[i].value[0] == 51539607552 && p[i].value[1] == 25769803776))
+			p[i].width++;
         while (j++ < 4)
             if (p[i].value[j] > 0)
                 height++;
@@ -207,20 +218,39 @@ char get_final(piece *p) //get the final piece, return its id
     return (p[i].id);
 }
 
-void temp(boards *board)
+void temp(boards *board, piece *p)
 {
 	uint8_t strnum;
 	uint8_t i;
+	uint8_t j;
 
+	j = 0;
 	i = 0;
 	strnum = (board->final) - 64;
+	while (p[i].id >= 'A' && p[i].id <= 'Z')
+	{
+		j = 0;
+		printf("%d", p[i].ylast);
+		printf("\n");
+		while (j <= 3)
+		{
+			printbits(p[i].value[j]);
+			printf("\n");
+			j++;
+		}
+		i++;
+	}
+	i = 0;
 	while(i < 52)
 	{
 		printbits(board->row[i]);
 		printf("\n");
 		i++;
 	}
+	return ;
 }
+
+
 
 int main(int argc, char ** argv)
 {
@@ -228,14 +258,16 @@ int main(int argc, char ** argv)
 	piece p[27];
 	boards *board;
 
+    file = open(argv[1], O_RDONLY);
 	board = (boards*)malloc(sizeof(boards*));
 	zero_it(board, p);//initialize everything to 0
-	if(!reader((file = open(argv[1], O_RDONLY)), p))
-		write (1, "trouble reading, come closer\n", 30);
+	//printf("%d", file);
+	reader(file, p);
+	//printf("%d", file);
 	board->final = get_final(p);
-	board->size = 2;
+	board->size = 3;
 	if (solver(p, board))
-		temp(board);
+		temp(board, p);
 	else
 		write (1, "sorry, no answer\n", 17);
 	return (0);

@@ -6,7 +6,7 @@
      By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+          
                                                   +#+#+#+#+#+   +#+             
      Created: 2018/07/18 12:23:22 by jkellehe          #+#    #+#               
-     Updated: 2018/07/20 10:39:42 by jkellehe         ###   ########.fr         
+     Updated: 2018/07/30 22:05:56 by jkellehe         ###   ########.fr         
                                                                                 
 ********************************************************************************
 
@@ -82,3 +82,210 @@ RIGHT NOW ****the algorithm checks for the first position of each piece that sat
 todo:
 DONE-the above thing
 -also make it check from the high left position as described, in the method described. 
+
+__________-
+the second thing is underway:
+-need to find the width of the board plus the piece in question, and run only when the potential board width is under size.  
+-probably a board->width and board->height
+		  -could get have a function get the width of the 
+
+
+there is a 0,0, but the board pieces can be on top of this.  could have a function on p to return a total height and width of the placed pieces.   the first piece would be at 0,0, if we take its height, + next pieces height.
+
+actually it is number from whichever x is lowest amount placed, subtract that from the highest x+width amoung the placed.   the same applies to tallness. 
+
+int height(piece is, piece *p)
+{
+
+}
+
+int width(piece is, piece *p)
+{
+
+}
+
+this means that checker needs to recieve p from recursive
+___________________
+
+so we have the max and min of x and y, and this will allow us to find the width of the board at any given time.   this can include the piece in question but it doesnt currently.   the dumb way to use this is to have it return an int every time, and call this function in the while statement of checker.  i would rather not, since checker is going to be part of the recursive call.   since i have the touching function.  I can just apporximate, as long as the span of the while loops is too large rather than too small.   so in this case widtheight is called only once at the beginning and establishes
+
+xmin is board->tlx;
+ymax added as is.ymax;
+xmax added as is.xmax;
+ymin is board->tly;
+
+
+before checker runs, it needs to set is.xlast and is.ylast.  if is.firstcheck, set these to tlx.  this means that widtheight call comes before checking is.firstcheck
+
+1100000000000000000000000000000000000000000000000000
+ 110000000000000000000000000000000000000000000000000
+
+1111000000000000000000000000000000000000000000000000
+
+0, 0, 0, 1, 1, 1, 1, 2)
+0, 0, 0, 1, 0, 2, 0, 3)
+
+
+
+______________________
+
+after a discussion with sean, i realized we dont need the board, and that removing it is probably the best way to fix the problems i was having with not placing the pieces in the top left corner.   we also realized that the algorithm should place pieces to the left of the previous, but not above, or at least not above first.  so maybe it should check to the right, then the left, then the top.   then left and top? lets make tests for this with the other persons code.  so off the top of my head, dont need
+
+board->row
+placed
+final
+
+piece placed or firstcheck, because we will just be going through one call per piece per situation. 
+
+
+0, 0, 0, 1, 
+__________________
+my new goal is to make
+
+the binary solution better. maybe we only have to move each piece a maximum of 4 left or right, with a maximum range of 10.   so this would work perfectly within the 64 bit or even the 16 bit number.   4 of them.  we would have to use the coordinates, to see if they are within 4 of each other. if so 
+
+
+if we are not going to place out of order, than the pieces need to be placed anywhere where they are not overlapping and satisfy the size requirement.   go clockwise around the existing structure by starting at 00, moving out until touching();, then execute a function called right, then one called bottom, then one called left, then one called top.  
+
+right:
+by starting at 0,0, and moving right until touching(); and currentx + width < size. call right();  in right iterate downwards until y + height = size
+
+
+_____________
+i have had another revelation.   i wrote the while loops that will check the possibilities of placement of a given piece in the correct order.  in doing this, it has become clear that it would make more sense if the recursive call was made from these while loops, because this is where the backtracking happens.   it is also possible that this creates a more itereation dependent structure, which could be faster.   a third possibility is to if checky, call solvey.   I am interesting in this triangular recursion.   I thought of it for the exam question brackets, and it seemed just interesting.   I know that some people were doing eval express this way, i think it was eval express. 
+
+
+the simplest would be to add this while loop structure to solvey.  these two solutions are different by name only.  but from this i can see that for each size.   there is only one call per piece. so the while loops will be consecutive, because we have one that checks from left to right, at each x value, check from ylast one more than tly, to max of tly + is.height. 
+
+
+100000000000000000000000000000000000
+ 11000000000000000000000000000000000
+
+the first is piece, the second is board. 
+
+
+ 11001001010111001001110010000100100111001100000110101010010111
+ 10001000101101000010111100011000000011111000111101011011001011
+101001101010101001000001001100010001010100000101000010010111011
+100110000000000010001111101110110001111011111010110100100011000
+
+this ^ is progres, ok?
+
+
+10000000000000000000000000000000000
+ 1100000000000000000000000000000000
+  110000000000000000000000000000000
+
+11100000000000000000000000000000000
+11100000000000000000000000000000000
+10000000000000000000000000000000000
+10000000000000000000000000000000000
+
+
+DDAA
+CDDA
+CCCA
+BBBB
+
+
+10000000000000000000000000000000000
+10000000000000000000000000000000000
+10000000000000000000000000000000000
+10000000000000000000000000000000000
+
+A
+110000000000000000000000000000000000
+ 10000000000000000000000000000000000
+ 10000000000000000000000000000000000
+
+B
+111100000000000000000000000000000000
+
+C
+100000000000000000000000000000000000
+111000000000000000000000000000000000
+
+D
+110000000000000000000000000000000000
+ 11000000000000000000000000000000000
+
+
+after this is something but p->id has been zeroed
+
+
+111111000000000000000000000000000000
+ 10100000000000000000000000000000000
+ 10001000000000000000000000000000000
+    11000000000000000000000000000000
+
+
+110000000000000000000000000000000000
+ 1
+ 1
+  1111000000000000000000000000000000
+
+0
+   11000000000000000000000000000000000
+    1000000000000000000000000000000000
+    1000000000000000000000000000000000
+
+3
+ 1111000000000000000000000000000000000
+
+
+
+1
+ 
+10000000000000000000000000000000000000
+11100000000000000000000000000000000000
+
+
+0
+ 1100000000000000000000000000000000000
+  110000000000000000000000000000000000
+
+
+ DDAA   000000000000000000000000000000000
+C0DDA   000000000000000000000000000000000
+CCC0A   000000000000000000000000000000000
+ BBBB   000000000000000000000000000000000
+
+next steps:
+-this is happening because the x and y values are wrong.   most of them shoul have negative xlast values, and they dont, so i need to trace through until i know why this is happening.   
+	  -actually just the xlast, the ys make sense
+
+51539607552
+17179869184
+
+   110000000000000000000000000000000000
+    10000000000000000000000000000000000
+    10000000000000000000000000000000000 
+
+  1111000000000000000000000000000000000
+   111100000000000000000000000000000000
+
+
+0
+1100000000000000000000000000000000000
+ 100000000000000000000000000000000000
+ 100000000000000000000000000000000000
+
+3
+1111000000000000000000000000000000000
+
+
+
+0
+  10000000000000000000000000000000000
+  11100000000000000000000000000000000
+
+
+2
+   1100000000000000000000000000000000
+    110000000000000000000000000000000
+
+
+1110000000000000000000000000000000000
+ 111100000000000000000000000000000000
+ 101100000000000000000000000000000000
+1111110000000000000000000000000000000
