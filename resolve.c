@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/23 12:17:05 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/07/31 00:08:41 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/31 00:13:07 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 		return (2);
 	}
 	widtheight(p, board);
-    p[board->current].xlast = board->tlx;
+    p[board->current].xlast = 0;
     p[board->current].ylast= board->tly;
 	while (p[board->current].id != 'A' && (touching(p[board->current], board) || leftof(p[board->current], board)) && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size))
 	{
@@ -193,6 +193,19 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 		}
 		p[board->current].xlast--;
 		shifter(p, board, 0);
+	}
+	while ((p[board->current].xlast) != 0)
+	{
+		if ((p[board->current].xlast) < 0)
+		{
+			p[board->current].xlast++;
+			shifter(p, board, 1);
+		}
+		else
+		{
+			p[board->current].xlast--;
+			shifter(p, board, 0);
+		}
 	}
 	return (0);
 }
