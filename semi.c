@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:38:23 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/07/30 17:36:34 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/03 15:53:14 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,16 +258,18 @@ int main(int argc, char ** argv)
 	piece p[27];
 	boards *board;
 
+
     file = open(argv[1], O_RDONLY);
-	board = (boards*)malloc(sizeof(boards*));
-	zero_it(board, p);//initialize everything to 0
-	//printf("%d", file);
+	board = (boards*)malloc(sizeof(boards) * 2);
+	zero_it(board, p);
 	reader(file, p);
-	//printf("%d", file);
 	board->final = get_final(p);
 	board->size = 3;
 	if (solver(p, board))
+	{
+		printer(p, board);
 		temp(board, p);
+	}
 	else
 		write (1, "sorry, no answer\n", 17);
 	return (0);

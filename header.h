@@ -6,7 +6,7 @@
 /*   By: dknoll <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/08 17:02:15 by dknoll            #+#    #+#             */
-/*   Updated: 2018/07/30 22:43:50 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/03 16:31:52 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,7 @@ int checky(piece *p, boards *board);
 int checker(piece *p, boards *board);
 void zero_it(boards *board, piece *p);
 void widtheight(piece *p, boards *board);
+void    printer(piece *p, boards *board);
+void print_res(char **res);
 
 #endif
