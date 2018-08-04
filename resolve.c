@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/23 12:17:05 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/08/03 18:51:31 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/03 19:12:55 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,16 +136,15 @@ int checker(piece *p, boards *board)//restart at xlast/ylast.   reset them if fi
 		return (2);
 	}
 	widtheight(p, board);
-    p[board->current].xlast = (p[board->current].id != 'A') ? 1 : 0; //p[board->current].xlast = 0;
-	(p[board->current].id != 'A') ? (shifter(p, board, 1)) : (1);
+    p[board->current].xlast = 0;
     p[board->current].ylast= board->tly;
-	/*while (p[board->current].id != 'A' && (touching(p[board->current], board) || leftof(p[board->current], board)) && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size))
+	while (p[board->current].id != 'A' && (touching(p[board->current], board) || leftof(p[board->current], board)) && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size))
 	{
 		shifter(p, board, 1);
 		p[board->current].xlast++;
 	}
 	(p[board->current].id != 'A') ? (shifter(p, board, 0)) : (1);
-	p[board->current].xlast -= (p[board->current].id != 'A') ? (1) : (0);*/
+	p[board->current].xlast -= (p[board->current].id != 'A') ? (1) : (0);
 	while (flag != 2 && ((p[board->current].xlast + p[board->current].width - board->tlx) <= board->size)) //check every piece on the right of board
 	{
 		p[board->current].ylast = board->tly;
