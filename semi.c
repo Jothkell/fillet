@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:38:23 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/08/03 15:53:14 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/03 16:37:28 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ int main(int argc, char ** argv)
 	if (solver(p, board))
 	{
 		printer(p, board);
-		temp(board, p);
+		//temp(board, p);
 	}
 	else
 		write (1, "sorry, no answer\n", 17);

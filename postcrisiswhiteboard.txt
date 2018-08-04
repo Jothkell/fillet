@@ -6,7 +6,7 @@
      By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+          
                                                   +#+#+#+#+#+   +#+             
      Created: 2018/07/18 12:23:22 by jkellehe          #+#    #+#               
-     Updated: 2018/08/03 16:10:47 by jkellehe         ###   ########.fr         
+     Updated: 2018/08/03 17:37:09 by jkellehe         ###   ########.fr         
                                                                                 
 ********************************************************************************
 
@@ -407,3 +407,8 @@ ________________
    10000000000000000000000000000000000
 
 11110000000000000000000000000000000000
+
+
+_____________
+-the algorithm needs to check moving rightward, then leftward, both times from 0,0.   that is why the answer is wrong
+-th pieces H and F are messed up, I think and hope its just a problem with the printer function
